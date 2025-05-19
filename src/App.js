@@ -4,7 +4,7 @@ import { fetchUsers } from "./Redux/userSlice";
 import React, { useEffect } from "react";
 
 function App() {
-  const { data, loading, error } = useSelector((state) => state.users);
+  const { data, loading } = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -15,11 +15,17 @@ function App() {
     <div>
       <h1>Users</h1>
       {loading && <p>Loading...</p>}
-      {error && <p>{error}</p>}
+
       <ul>
-        {data.map((user) => (
-          <li key={user.id}>{user.name}</li>
-        ))}
+        {data.map((user) =>
+          user.hasError ? (
+            <div key={user.id} style={{ color: "red" }}>
+              {user.errorMessage}
+            </div>
+          ) : (
+            <div key={user.id}>{user.name}</div>
+          )
+        )}
       </ul>
     </div>
   );

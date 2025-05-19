@@ -4,8 +4,21 @@ export const fetchUsers = createAsyncThunk(
   "users/fetchUsers",
   async () => {
     const response = await fetch("https://jsonplaceholder.typicode.com/users");
+    await new Promise((resolve)=> setTimeout(resolve,1000));
     const data = await response.json();
-    return data;
+   const modifiedData = data.map(user => {
+    const shouldfail=Math.random()<0.2;
+      if (shouldfail) {
+        return {
+          id: user.id,
+          hasError: true,
+          errorMessage: "Error ...Failed to load"
+        };
+      }
+      return user;
+    });
+
+    return modifiedData;
   }
 );
 
